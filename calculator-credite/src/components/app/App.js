@@ -1,27 +1,25 @@
-import React, {Component} from 'react';
+import React from 'react';
 import './App.css';
 
-import {BrowserRouter as Router, Route} from 'react-router-dom';
+import {Route} from 'react-router-dom';
 
-import AppHome from '../app-home';
+import AppHome from '../pages/app-home';
 
-import AppCalculator from '../app-calculator';
+import AppCalculator from '../pages/app-calculator';
 import Header from '../app-header';
-import AppResult from '../app-result';
+import AppResult from '../pages/app-result';
+import {widthCreditRateService} from '../hoc';
 
-class App extends Component {
-  render() {
+const App = ({creditrateService}) => {
+  console.log(creditrateService.getRate());
     return (
-      <Router>
         <div className="App">
           <Header/>
           <Route exact path="/" component={AppHome}/>
           <Route path="/calculator" component={AppCalculator}/>
           <Route path="/result" component={AppResult}/>
         </div>
-      </Router>
   );
-  }
 }
 
-export default App;
+export default widthCreditRateService()(App);
