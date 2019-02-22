@@ -1,31 +1,22 @@
 import React, {Component} from 'react';
 import './app-calculator.css';
+import {Link} from 'react-router-dom';
+import {connect} from 'react-redux';
+import {widthCreditRateService} from '../../hoc';
+import Preloader from '../../preloader';
+
 
 class AppCalculator extends Component {
 
+  componentDidMount() {
+    const {creditRateService, creditrateLoaded} = this.props;
+    creditRateService.getRate()
+      .then((data) => {
+        creditrateLoaded(data);
+      });
+  }
+
   state = {
-    jsonData: [
-      {
-        "id": 0, "rate": 2.5, "minSum": 10000, "maxSum": 20000,
-        "minTerm": 6, "maxTerm": 24, "currency": ["гривны", "доллары"], "activeCurrency": "доллары"
-      },
-      {
-        "id": 1, "rate": 4.25, "minSum": 100100, "maxSum": 190000,
-        "minTerm": 12, "maxTerm": 60, "currency": ["гривны", "доллары"], "activeCurrency": "доллары"
-      },
-      {
-        "id": 2, "rate": 14, "minSum": 50000, "maxSum": 200000,
-        "minTerm": 8, "maxTerm": 36, "currency": ["гривны", "доллары"], "activeCurrency": "гривны"
-      },
-      {
-        "id": 3, "rate": 18, "minSum": 100000, "maxSum": 500000,
-        "minTerm": 6, "maxTerm": 20, "currency": ["гривны", "доллары"], "activeCurrency": "гривны"
-      },
-      {
-        "id": 4, "rate": 24, "minSum": 500000, "maxSum": 10000000,
-        "minTerm": 24, "maxTerm": 120, "currency": ["гривны", "доллары"], "activeCurrency": "гривны"
-      }
-    ],
     isActive: localStorage.getItem('isActive') || false,
     filterObj: JSON.parse(localStorage.getItem('filterObj')) || {},
     coef: localStorage.getItem('coef') || 0,
@@ -38,7 +29,7 @@ class AppCalculator extends Component {
   };
 
   selectedRate = (id) => {
-    let newData = this.state.jsonData.slice().filter((item) => {
+    let newData = this.props.creditrate.slice().filter((item) => {
       return item.id === id;
     })[0];
     newData.arrTerm = [];
@@ -90,8 +81,9 @@ class AppCalculator extends Component {
 
 
   fullSum = () => {
-    this.setState(({coef, selectSum, selectCur, selectTerm, filterObj}) => {
-      let result = Math.ceil(selectSum * coef * Math.pow((1 + coef), selectTerm) / (Math.pow((1 + coef), selectTerm) - 1) * selectTerm);
+    this.setState(({coef, filterObj, selectCur, selectSum, selectTerm}) => {
+
+      let result = Math.ceil(+selectSum * +coef * Math.pow((1 + +coef), +selectTerm) / (Math.pow((1 + +coef), +selectTerm) - 1) * +selectTerm);
 
       if (filterObj["activeCurrency"] === "доллары" && selectCur !== filterObj["activeCurrency"]) {
         result *= 27;
@@ -99,6 +91,7 @@ class AppCalculator extends Component {
       if (filterObj["activeCurrency"] === "гривны" && selectCur !== filterObj["activeCurrency"]) {
         result = Math.ceil(result / 27);
       }
+
       localStorage.setItem('fullSum', result);
       return {fullSum: result}
     });
@@ -112,7 +105,6 @@ class AppCalculator extends Component {
     });
   };
   overPayment = () => {
-    console.log(this.state.fullSum, this.state.selectSum);
     this.setState(({fullSum, selectSum}) => {
       localStorage.setItem('overPayment', fullSum - selectSum);
       return {overPayment: fullSum - selectSum}
@@ -129,17 +121,34 @@ class AppCalculator extends Component {
     return (this.state.selectCur === "гривны") ? 'грн.' : '$'
   };
 
-  render() {
+  resultObj = () => {
+    return [
+      {name: "Ставка", value: this.state.filterObj.rate, symbol: '%'},
+      {name: "Сумма", value: this.state.selectSum, symbol: this.correctCur()},
+      {name: "Срок", value: this.state.selectTerm, symbol: 'мес.'},
+      {name: "Полная сумма", value: this.state.fullSum, symbol: this.correctCur()},
+      {name: "Ежемесячный платеж", value: this.state.monthPayment, symbol: this.correctCur()},
+      {name: "Переплата", value: this.state.overPayment, symbol: this.correctCur()}
+    ]
+  };
 
+  render() {
+    const {creditrate, loading} = this.props;
     const {
-      jsonData, isActive, filterObj, selectSum, selectCur, selectTerm, monthPayment, fullSum
+      isActive, filterObj, selectSum,
+      selectCur, selectTerm, monthPayment, fullSum
     } = this.state;
 
-    const elements = jsonData.map((item) => {
+    if (loading) {
+      return <Preloader />;
+    }
+
+    const elements = creditrate.map((item) => {
       return (
         <tr key={item.id}>
           <td>{item.rate}
-            <button type="button" className={(filterObj.id === item.id) ? 'btn btn-outline-primary ml-3  active' : 'btn btn-outline-primary ml-3'}
+            <button type="button"
+                    className={(filterObj.id === item.id) ? 'btn btn-outline-primary ml-3  active' : 'btn btn-outline-primary ml-3'}
                     onClick={() => this.selectedRate(item.id)}
             >Выбрать
             </button>
@@ -152,100 +161,121 @@ class AppCalculator extends Component {
     });
 
     return (
-      <div className="container">
+      <div className="container ">
         <h1>Решение задачи</h1>
-        {/*        {coef}<br/>
-         {monthPayment}<br/>
-         {overPayment}<br/>
-         {fullSum}<br/>*/}
-        <div>
-          { !isActive ? (
-            <div className="mb-3 mt-3">
-              <h3>Выберите ставку</h3>
-              <p>Что бы посчитать выгоды кредита, Выберите пожалуйста размер ставки</p>
-            </div>
-          ) : (
-            <div className="row">
-              <div className="col-sm">
-                <p><strong>Расчет по кредиту:</strong></p>
-                <div className="form-group">
-                  <label htmlFor="formControlRange" className="small-text">Сумма</label>
-                  <p className="form-control-result">{selectSum}</p>
-                  <input type="range" className="form-control-range" id="formControlRange"
-                         value={selectSum}
-                         onInput={this.selectedSum}
-                         min={filterObj.minSum}
-                         max={filterObj.maxSum}
-                  />
-                </div>
-                <div className="form-group row">
-                  <div className="col-sm">
-                    <label htmlFor="selectcur" className="small-text">Валюта</label>
-                    <select className="form-control" id="selectcur"
-                            onChange={this.selectedCur}
-                            value={selectCur}
-                    >
-                      {filterObj.currency.map((item, i) => {
-                        return <option key={i}>{item}</option>
-                      })}arrTerm
-                    </select>
+        <div className="center">
+          <div>
+            { !isActive ? (
+              <div className="mb-3 mt-3">
+                <h3>Выберите ставку</h3>
+                <p>Что бы посчитать выгоды кредита, Выберите пожалуйста размер ставки</p>
+              </div>
+            ) : (
+              <div className="row">
+                <div className="col-sm">
+                  <p><strong>Расчет по кредиту:</strong></p>
+                  <div className="form-group">
+                    <label htmlFor="formControlRange" className="small-text">Сумма</label>
+                    <p className="form-control-result">{selectSum}</p>
+                    <input type="range" className="form-control-range" id="formControlRange"
+                           value={selectSum}
+                           onChange={this.selectedSum}
+                           min={filterObj.minSum}
+                           max={filterObj.maxSum}
+                    />
                   </div>
-                  <div className="col-sm">
-                    <label htmlFor="selectterm" className="small-text">Срок</label>
-                    <select className="form-control" id="selectterm"
-                            onChange={this.selectedTerm}
-                            value={selectTerm}
-                    >
-                      {filterObj.arrTerm.map((item, i) => {
-                        return <option key={i}>{item}</option>
-                      })}
-                    </select>
-                  </div>
+                  <div className="form-group row">
+                    <div className="col-sm">
+                      <label htmlFor="selectcur" className="small-text">Валюта</label>
+                      <select className="form-control" id="selectcur"
+                              onChange={this.selectedCur}
+                              value={selectCur}
+                      >
+                        {filterObj.currency.map((item, i) => {
+                          return <option key={i}>{item}</option>
+                        })}
+                      </select>
+                    </div>
+                    <div className="col-sm">
+                      <label htmlFor="selectterm" className="small-text">Срок</label>
+                      <select className="form-control" id="selectterm"
+                              onChange={this.selectedTerm}
+                              value={selectTerm}
+                      >
+                        {filterObj.arrTerm.map((item, i) => {
+                          return <option key={i}>{item}</option>
+                        })}
+                      </select>
+                    </div>
 
+                  </div>
+                  <Link className="btn btn-success"
+                        to={{
+                          pathname: `/result`, query: {
+                            result: this.resultObj()
+                          }
+                        }}> Взять кредит</Link>
                 </div>
-                <button className="btn btn-success" onClick={this.ddd}> Взять кредит</button>
-              </div>
-              <div className="col-sm">
-                <div className="resultCredit">
-                  <div className="row">
-                    <div className="col-sm">
-                      <span className="small-text">Ставка по кредиту</span>
-                      <p>{filterObj.rate}%</p>
+                <div className="col-sm">
+                  <div className="resultCredit">
+                    <div className="row">
+                      <div className="col-sm">
+                        <span className="small-text">Ставка по кредиту</span>
+                        <p>{filterObj.rate}%</p>
+                      </div>
+                      <div className="col-sm">
+                        <span className="small-text">Ежемесячный платеж</span>
+                        <p>{monthPayment} {this.correctCur()}</p>
+                      </div>
                     </div>
-                    <div className="col-sm">
-                      <span className="small-text">Ежемесячный платеж</span>
-                      <p>{monthPayment} {this.correctCur()}</p>
+                    <div className="row">
+                      <div className="col-sm">
+                        <span className="small-text">Общая переплата</span>
+                        <p className="big-text">{fullSum} {this.correctCur()}</p>
+                      </div>
                     </div>
                   </div>
-                  <div className="row">
-                    <div className="col-sm">
-                      <span className="small-text">Общая переплата</span>
-                      <p className="big-text">{fullSum} {this.correctCur()}</p>
-                    </div>
-                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
+
+          <h3 className="mt-4">Таблица ставок</h3>
+          <table className="table">
+            <thead>
+            <tr>
+              <th scope="col">Размер ставки (%)</th>
+              <th scope="col">Валюта</th>
+              <th scope="col">Сума от, до</th>
+              <th scope="col">Срок от, до</th>
+            </tr>
+            </thead>
+            <tbody>
+            {elements}
+            </tbody>
+          </table>
         </div>
-
-        <h3 className="mt-4">Таблица ставок</h3>
-        <table className="table">
-          <thead>
-          <tr>
-            <th scope="col">Размер ставки (%)</th>
-            <th scope="col">Валюта</th>
-            <th scope="col">Сума от, до</th>
-            <th scope="col">Срок от, до</th>
-          </tr>
-          </thead>
-          <tbody>
-          {elements}
-          </tbody>
-        </table>
       </div>
     )
   }
 }
 
-export default AppCalculator;
+
+const mapStateToProps = ({creditrate, loading}) => {
+  return {creditrate, loading};
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    creditrateLoaded: (newCreditrate) => {
+      dispatch({
+        type: 'CREDITRATE_LOADED',
+        payload: newCreditrate
+      });
+    }
+  };
+};
+
+export default widthCreditRateService()(
+  connect(mapStateToProps, mapDispatchToProps)(AppCalculator)
+);

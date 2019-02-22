@@ -1,6 +1,7 @@
 
 const initState = {
-  creditrate: []
+  creditrate: [],
+  loading: true
 };
 
 const reducer = (state = initState, action) => {
@@ -8,7 +9,8 @@ const reducer = (state = initState, action) => {
   switch(action.type){
     case 'CREDITRATE_LOADED':
       return {
-        creditrate: action.payload
+        creditrate: action.payload,
+        loading: false
       };
     default:
       return state;

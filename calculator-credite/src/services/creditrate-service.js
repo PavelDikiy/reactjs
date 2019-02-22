@@ -1,18 +1,13 @@
-class CreditRate {
+import jsonData from '../tz.json';
+
+class CreditRateService {
   getRate(){
-    return [
-      {"id":0,"rate":2.5,"minSum":10000,"maxSum":20000,
-        "minTerm":6,"maxTerm":24,"currency":["гривны","доллары"],"activeCurrency":"доллары"},
-      {"id":1,"rate":4.25,"minSum":100100,"maxSum":190000,
-        "minTerm":12,"maxTerm":60,"currency":["гривны","доллары"],"activeCurrency":"доллары"},
-      {"id":2,"rate":14,"minSum":50000,"maxSum":200000,
-        "minTerm":8,"maxTerm":36,"currency":["гривны","доллары"],"activeCurrency":"гривны"},
-      {"id":3,"rate":18,"minSum":100000,"maxSum":500000,
-        "minTerm":6,"maxTerm":20,"currency":["гривны","доллары"],"activeCurrency":"гривны"},
-      {"id":4,"rate":24,"minSum":500000,"maxSum":10000000,
-        "minTerm":24,"maxTerm":120,"currency":["гривны","доллары"],"activeCurrency":"гривны"}
-    ]
+    return new Promise((resolve) => {
+      setTimeout(()=>{
+        resolve(jsonData)
+      }, 1000);
+    })
   }
 }
 
-export default CreditRate;
+export default CreditRateService;

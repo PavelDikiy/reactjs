@@ -6,11 +6,11 @@ import App from './components/app';
 import {BrowserRouter as Router} from 'react-router-dom';
 
 import {Provider} from 'react-redux';
-import CreditRate from './services/creditrate-service';
+import CreditRateService from './services/creditrate-service';
 import {CreditRateServiceProvider} from './components/creditrate-service-context';
 import store from './store';
 
-const creditRateService = new CreditRate();
+const creditRateService = new CreditRateService();
 
 ReactDOM.render(
   <Provider store={store}>

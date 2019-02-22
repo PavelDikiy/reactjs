@@ -1,68 +1,49 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Реализовать кредитный калькулятор
+Используйзте технологии:
+react;
+react-router;
+react-redux.
 
-## Available Scripts
+Калькулятор должен содержать набор элементов для подбора нужных параметров кредита:
+валюта;
+Cумма;
+срок.
 
-In the project directory, you can run:
+При изменении параметров нужно производить поиск соответствующей ставки по кредиту и производить расчет:
 
-### `npm start`
+ежемесячного платежа;
+общей переплаты;
+Данные для расчетов должны загружаться асинхронно из json файла который должен лежать в папке с проектом.
+Файл json содержит массив ставок по кредитам, с полями:
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+ставка в процентах годовых;
+минимальная сумма кредита для этой ставки;
+максимальна сумма кредита для этой ставки;
+минимальный срок для ставки;
+максимальный срок для ставки;
+валюта кредита (гривны, доллары).
+Под кредитным калькулятором нужно отобразить таблицу ставок, в которую вывести таблицу со всеми ставками в виде:
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+Размер ставки	Валюта	Сума от, до	Срок от, до
+2.5	Доллары	10 — 20 тыс	6 мес. - 2 лет
+Формулы для расчета:
 
-### `npm test`
+СТАВКА = процент годовых;
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+СРОК = срок в месяцах на сколько берем кредит;
 
-### `npm run build`
+КОЕФ = (СТАВКА / 100 / 12);
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+ПОЛНАЯ_СУММА_К_ВЫПЛАТЕ= СУММА * КОЕФ * POW((1 + КОЕФ), СРОК) / (POW((1 + КОЕФ), СРОК) — 1) * СРОК;
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+ЕЖЕМЕСЯЧНЫЙ_ПЛАТЕЖ = ПОЛНАЯ_СУММА_К_ВЫПЛАТЕ / СРОК;
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+ПЕРЕПЛАТА = ПОЛНАЯ_СУММА_К_ВЫПЛАТЕ — СУММА;
 
-### `npm run eject`
+Примечания
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+при загрузке данных необходимо отобразить лоадер;
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+все параметры должны сохраняться и быть выбраны после перезагрузки страницы;
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+под формой добавить кнопку оформить при нажатии на которую будет происходить переход на другую страницу на которой нужно отобразить параметры и результат расчетов.
