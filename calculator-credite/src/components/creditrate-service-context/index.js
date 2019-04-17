@@ -1,7 +1,9 @@
-import {
-  CreditRateServiceProvider,
-  CreditRateServiceConsumer
-} from './creditrate-service-context'
+import React from 'react';
+
+const {
+  Provider: CreditRateServiceProvider,
+  Consumer: CreditRateServiceConsumer
+} = React.createContext();
 
 export {
   CreditRateServiceProvider,

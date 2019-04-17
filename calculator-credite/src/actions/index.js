@@ -1,10 +1,4 @@
-const creditrateLoaded = (rate) => {
-  return {
-    type: 'CREDITRATE_LOADED',
-    payload: rate
-  };
-};
-
-export {
-  creditrateLoaded
-}
+export const creditrateLoaded = rate => ({
+  type: 'CREDITRATE_LOADED',
+  rate
+});

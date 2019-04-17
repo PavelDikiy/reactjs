@@ -1,13 +1,11 @@
-import React, {Component} from 'react';
-import './app-calculator.css';
-import {Link} from 'react-router-dom';
-import {connect} from 'react-redux';
-import {widthCreditRateService} from '../../hoc';
-import Preloader from '../../preloader';
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import widthCreditRateService from '../../HOC/with-creditrate-service';
+import Preloader from '../../components/Preloader/Preloader';
+import './CalculatorStyles.css';
 
-
-class AppCalculator extends Component {
-
+class Calculator extends Component {
   componentDidMount() {
     const {creditRateService, creditrateLoaded} = this.props;
     creditRateService.getRate()
@@ -270,12 +268,12 @@ const mapDispatchToProps = (dispatch) => {
     creditrateLoaded: (newCreditrate) => {
       dispatch({
         type: 'CREDITRATE_LOADED',
-        payload: newCreditrate
+        rate: newCreditrate
       });
     }
   };
 };
 
 export default widthCreditRateService()(
-  connect(mapStateToProps, mapDispatchToProps)(AppCalculator)
+  connect(mapStateToProps, mapDispatchToProps)(Calculator)
 );
