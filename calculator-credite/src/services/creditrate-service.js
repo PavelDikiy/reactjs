@@ -1,9 +1,9 @@
 import jsonData from '../tz.json';
 
 class CreditRateService {
-  getRate(){
+  getRate() {
     return new Promise((resolve) => {
-      setTimeout(()=>{
+      setTimeout(() => {
         resolve(jsonData)
       }, 1000);
     })

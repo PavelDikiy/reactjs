@@ -5,8 +5,8 @@ const widthCreditRateService = (Wrapped) => {
   return (props) => {
     return (
       <CreditRateServiceConsumer>
-        { 
-          (creditRateService) => 
+        {
+          (creditRateService) =>
             <Wrapped {...props} creditRateService={creditRateService} />
         }
       </CreditRateServiceConsumer>

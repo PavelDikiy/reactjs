@@ -7,7 +7,7 @@ import './CalculatorStyles.css';
 
 class Calculator extends Component {
   componentDidMount() {
-    const {creditRateService, creditrateLoaded} = this.props;
+    const { creditRateService, creditrateLoaded } = this.props;
     creditRateService.getRate()
       .then((data) => {
         creditrateLoaded(data);
@@ -79,7 +79,7 @@ class Calculator extends Component {
 
 
   fullSum = () => {
-    this.setState(({coef, filterObj, selectCur, selectSum, selectTerm}) => {
+    this.setState(({ coef, filterObj, selectCur, selectSum, selectTerm }) => {
 
       let result = Math.ceil(+selectSum * +coef * Math.pow((1 + +coef), +selectTerm) / (Math.pow((1 + +coef), +selectTerm) - 1) * +selectTerm);
 
@@ -91,21 +91,21 @@ class Calculator extends Component {
       }
 
       localStorage.setItem('fullSum', result);
-      return {fullSum: result}
+      return { fullSum: result }
     });
   };
   monthPayment = () => {
 
-    this.setState(({fullSum, selectTerm}) => {
+    this.setState(({ fullSum, selectTerm }) => {
       const mp = Math.ceil(fullSum / selectTerm);
       localStorage.setItem('monthPayment', mp);
-      return {monthPayment: mp}
+      return { monthPayment: mp }
     });
   };
   overPayment = () => {
-    this.setState(({fullSum, selectSum}) => {
+    this.setState(({ fullSum, selectSum }) => {
       localStorage.setItem('overPayment', fullSum - selectSum);
-      return {overPayment: fullSum - selectSum}
+      return { overPayment: fullSum - selectSum }
     });
   };
 
@@ -121,17 +121,17 @@ class Calculator extends Component {
 
   resultObj = () => {
     return [
-      {name: "Ставка", value: this.state.filterObj.rate, symbol: '%'},
-      {name: "Сумма", value: this.state.selectSum, symbol: this.correctCur()},
-      {name: "Срок", value: this.state.selectTerm, symbol: 'мес.'},
-      {name: "Полная сумма", value: this.state.fullSum, symbol: this.correctCur()},
-      {name: "Ежемесячный платеж", value: this.state.monthPayment, symbol: this.correctCur()},
-      {name: "Переплата", value: this.state.overPayment, symbol: this.correctCur()}
+      { name: "Ставка", value: this.state.filterObj.rate, symbol: '%' },
+      { name: "Сумма", value: this.state.selectSum, symbol: this.correctCur() },
+      { name: "Срок", value: this.state.selectTerm, symbol: 'мес.' },
+      { name: "Полная сумма", value: this.state.fullSum, symbol: this.correctCur() },
+      { name: "Ежемесячный платеж", value: this.state.monthPayment, symbol: this.correctCur() },
+      { name: "Переплата", value: this.state.overPayment, symbol: this.correctCur() }
     ]
   };
 
   render() {
-    const {creditrate, loading} = this.props;
+    const { creditrate, loading } = this.props;
     const {
       isActive, filterObj, selectSum,
       selectCur, selectTerm, monthPayment, fullSum
@@ -146,8 +146,8 @@ class Calculator extends Component {
         <tr key={item.id}>
           <td>{item.rate}
             <button type="button"
-                    className={(filterObj.id === item.id) ? 'btn btn-outline-primary ml-3  active' : 'btn btn-outline-primary ml-3'}
-                    onClick={() => this.selectedRate(item.id)}
+              className={(filterObj.id === item.id) ? 'btn btn-outline-primary ml-3  active' : 'btn btn-outline-primary ml-3'}
+              onClick={() => this.selectedRate(item.id)}
             >Выбрать
             </button>
           </td>
@@ -163,93 +163,93 @@ class Calculator extends Component {
         <h1>Решение задачи</h1>
         <div className="center">
           <div>
-            { !isActive ? (
+            {!isActive ? (
               <div className="mb-3 mt-3">
                 <h3>Выберите ставку</h3>
                 <p>Что бы посчитать выгоды кредита, Выберите пожалуйста размер ставки</p>
               </div>
             ) : (
-              <div className="row">
-                <div className="col-sm">
-                  <p><strong>Расчет по кредиту:</strong></p>
-                  <div className="form-group">
-                    <label htmlFor="formControlRange" className="small-text">Сумма</label>
-                    <p className="form-control-result">{selectSum}</p>
-                    <input type="range" className="form-control-range" id="formControlRange"
-                           value={selectSum}
-                           onChange={this.selectedSum}
-                           min={filterObj.minSum}
-                           max={filterObj.maxSum}
-                    />
-                  </div>
-                  <div className="form-group row">
-                    <div className="col-sm">
-                      <label htmlFor="selectcur" className="small-text">Валюта</label>
-                      <select className="form-control" id="selectcur"
-                              onChange={this.selectedCur}
-                              value={selectCur}
-                      >
-                        {filterObj.currency.map((item, i) => {
-                          return <option key={i}>{item}</option>
-                        })}
-                      </select>
+                <div className="row">
+                  <div className="col-sm">
+                    <p><strong>Расчет по кредиту:</strong></p>
+                    <div className="form-group">
+                      <label htmlFor="formControlRange" className="small-text">Сумма</label>
+                      <p className="form-control-result">{selectSum}</p>
+                      <input type="range" className="form-control-range" id="formControlRange"
+                        value={selectSum}
+                        onChange={this.selectedSum}
+                        min={filterObj.minSum}
+                        max={filterObj.maxSum}
+                      />
                     </div>
-                    <div className="col-sm">
-                      <label htmlFor="selectterm" className="small-text">Срок</label>
-                      <select className="form-control" id="selectterm"
-                              onChange={this.selectedTerm}
-                              value={selectTerm}
-                      >
-                        {filterObj.arrTerm.map((item, i) => {
-                          return <option key={i}>{item}</option>
-                        })}
-                      </select>
-                    </div>
+                    <div className="form-group row">
+                      <div className="col-sm">
+                        <label htmlFor="selectcur" className="small-text">Валюта</label>
+                        <select className="form-control" id="selectcur"
+                          onChange={this.selectedCur}
+                          value={selectCur}
+                        >
+                          {filterObj.currency.map((item, i) => {
+                            return <option key={i}>{item}</option>
+                          })}
+                        </select>
+                      </div>
+                      <div className="col-sm">
+                        <label htmlFor="selectterm" className="small-text">Срок</label>
+                        <select className="form-control" id="selectterm"
+                          onChange={this.selectedTerm}
+                          value={selectTerm}
+                        >
+                          {filterObj.arrTerm.map((item, i) => {
+                            return <option key={i}>{item}</option>
+                          })}
+                        </select>
+                      </div>
 
+                    </div>
+                    <Link className="btn btn-success"
+                      to={{
+                        pathname: `/result`, query: {
+                          result: this.resultObj()
+                        }
+                      }}> Взять кредит</Link>
                   </div>
-                  <Link className="btn btn-success"
-                        to={{
-                          pathname: `/result`, query: {
-                            result: this.resultObj()
-                          }
-                        }}> Взять кредит</Link>
-                </div>
-                <div className="col-sm">
-                  <div className="resultCredit">
-                    <div className="row">
-                      <div className="col-sm">
-                        <span className="small-text">Ставка по кредиту</span>
-                        <p>{filterObj.rate}%</p>
+                  <div className="col-sm">
+                    <div className="resultCredit">
+                      <div className="row">
+                        <div className="col-sm">
+                          <span className="small-text">Ставка по кредиту</span>
+                          <p>{filterObj.rate}%</p>
+                        </div>
+                        <div className="col-sm">
+                          <span className="small-text">Ежемесячный платеж</span>
+                          <p>{monthPayment} {this.correctCur()}</p>
+                        </div>
                       </div>
-                      <div className="col-sm">
-                        <span className="small-text">Ежемесячный платеж</span>
-                        <p>{monthPayment} {this.correctCur()}</p>
+                      <div className="row">
+                        <div className="col-sm">
+                          <span className="small-text">Общая переплата</span>
+                          <p className="big-text">{fullSum} {this.correctCur()}</p>
+                        </div>
                       </div>
                     </div>
-                    <div className="row">
-                      <div className="col-sm">
-                        <span className="small-text">Общая переплата</span>
-                        <p className="big-text">{fullSum} {this.correctCur()}</p>
-                      </div>
-                    </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
           </div>
 
           <h3 className="mt-4">Таблица ставок</h3>
           <table className="table">
             <thead>
-            <tr>
-              <th scope="col">Размер ставки (%)</th>
-              <th scope="col">Валюта</th>
-              <th scope="col">Сума от, до</th>
-              <th scope="col">Срок от, до</th>
-            </tr>
+              <tr>
+                <th scope="col">Размер ставки (%)</th>
+                <th scope="col">Валюта</th>
+                <th scope="col">Сума от, до</th>
+                <th scope="col">Срок от, до</th>
+              </tr>
             </thead>
             <tbody>
-            {elements}
+              {elements}
             </tbody>
           </table>
         </div>
@@ -259,8 +259,8 @@ class Calculator extends Component {
 }
 
 
-const mapStateToProps = ({creditrate, loading}) => {
-  return {creditrate, loading};
+const mapStateToProps = ({ creditrate, loading }) => {
+  return { creditrate, loading };
 };
 
 const mapDispatchToProps = (dispatch) => {

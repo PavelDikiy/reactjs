@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
-import {BrowserRouter as Router} from 'react-router-dom';
-import {Provider} from 'react-redux';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { Provider } from 'react-redux';
 
 import App from './containers/App/App';
 
@@ -20,6 +20,6 @@ render(
         <App />
       </Router>
     </CreditRateServiceProvider>
-  </Provider>, 
+  </Provider>,
   document.getElementById('root')
 );

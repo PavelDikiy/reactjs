@@ -16,22 +16,22 @@ const Result = (props) => {
 
           <table className="table">
             <thead>
-            <tr>
-              <th>Наименование</th>
-              <th>Значение</th>
-            </tr>
+              <tr>
+                <th>Наименование</th>
+                <th>Значение</th>
+              </tr>
             </thead>
             <tbody>
-            {
-              result.map((item, key) => {
-                return (
-                  <tr key={key}>
-                    <td>{item.name}</td>
-                    <td>{item.value} {item.symbol}</td>
-                  </tr>
-                )
-              })
-            }
+              {
+                result.map((item, key) => {
+                  return (
+                    <tr key={key}>
+                      <td>{item.name}</td>
+                      <td>{item.value} {item.symbol}</td>
+                    </tr>
+                  )
+                })
+              }
             </tbody>
           </table>
 
@@ -40,7 +40,7 @@ const Result = (props) => {
       </div>
     );
   } else {
-    return <div>{ props.history.push('/calculator') }</div>;
+    return <div>{props.history.push('/calculator')}</div>;
   }
 }
 

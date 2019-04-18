@@ -9,11 +9,11 @@ import './AppStyles.css';
 const App = () => {
   return (
     <div className="App">
-      <Header/>
+      <Header />
       <Switch>
-        <Route exact path="/" component={Home}/>
-        <Route path="/calculator" component={Calculator}/>
-        <Route path="/result" component={Result}/>
+        <Route exact path="/" component={Home} />
+        <Route path="/calculator" component={Calculator} />
+        <Route path="/result" component={Result} />
       </Switch>
     </div>
   );
