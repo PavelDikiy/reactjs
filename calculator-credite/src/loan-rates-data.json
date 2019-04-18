@@ -1,11 +1,15 @@
-[{
+[
+  {
     "id": 0,
     "rate": 2.5,
     "minSum": 10000,
     "maxSum": 20000,
     "minTerm": 6,
     "maxTerm": 24,
-    "currency": ["гривны", "доллары"],
+    "currency": [
+      "гривны",
+      "доллары"
+    ],
     "activeCurrency": "доллары"
   },
   {
@@ -15,7 +19,10 @@
     "maxSum": 190000,
     "minTerm": 12,
     "maxTerm": 60,
-    "currency": ["гривны", "доллары"],
+    "currency": [
+      "гривны",
+      "доллары"
+    ],
     "activeCurrency": "доллары"
   },
   {
@@ -25,7 +32,10 @@
     "maxSum": 200000,
     "minTerm": 8,
     "maxTerm": 36,
-    "currency": ["гривны", "доллары"],
+    "currency": [
+      "гривны",
+      "доллары"
+    ],
     "activeCurrency": "гривны"
   },
   {
@@ -35,7 +45,10 @@
     "maxSum": 500000,
     "minTerm": 6,
     "maxTerm": 20,
-    "currency": ["гривны", "доллары"],
+    "currency": [
+      "гривны",
+      "доллары"
+    ],
     "activeCurrency": "гривны"
   },
   {
@@ -45,7 +58,10 @@
     "maxSum": 10000000,
     "minTerm": 24,
     "maxTerm": 120,
-    "currency": ["гривны", "доллары"],
+    "currency": [
+      "гривны",
+      "доллары"
+    ],
     "activeCurrency": "гривны"
   }
 ]

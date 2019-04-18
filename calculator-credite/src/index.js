@@ -2,24 +2,62 @@ import React from 'react';
 import { render } from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
-
+// import { createStore } from 'redux';
+// import reducer from './reducers'
 import App from './containers/App/App';
 
-import CreditRateService from './services/creditrate-service';
-import { CreditRateServiceProvider } from './components/creditrate-service-context';
-import store from './store';
+import loanRatesData from './loan-rates-data.json';
 
-import './index.css';
+console.log(loanRatesData);
 
-const creditRateService = new CreditRateService();
+/**
+ * 
+ * Store
+ * 
+ */
+// const store = createStore(reducer);
+
+
+
+/**
+ * 
+ * Consumer, Provider
+ *  
+ * */ 
+// const {
+//   Provider: CreditRateServiceProvider,
+//   Consumer: CreditRateServiceConsumer
+// } = React.createContext();
+
+
+
+/**
+ * 
+ * Credit service data
+ * 
+ */
+// import CreditRateService from './services/creditrate-service';
+
+// const creditRateService = new CreditRateService();
+
+// class CreditRateService {
+//   getRate() {
+//     return new Promise((resolve) => {
+//       setTimeout(() => {
+//         resolve(jsonData)
+//       }, 1000);
+//     })
+//   }
+// }
 
 render(
-  <Provider store={store}>
-    <CreditRateServiceProvider value={creditRateService}>
-      <Router>
-        <App />
-      </Router>
-    </CreditRateServiceProvider>
+  <Provider>
+    <Router>
+      <App />
+    </Router>
+    {/* <CreditRateServiceProvider value={creditRateService}>
+      
+    </CreditRateServiceProvider> */}
   </Provider>,
   document.getElementById('root')
 );
