@@ -1,5 +1,7 @@
+// # Core
 import React from 'react';
 import { Link } from 'react-router-dom';
+
 
 const Result = (props) => {
   if (props.location.query) {

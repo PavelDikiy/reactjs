@@ -1,10 +1,20 @@
+// # Core
 import React, { Component } from 'react';
 
-class LoanRates extends Component {
+// # Redux
+import { connect } from 'react-redux';
+import { addSelectedLoanRate } from '../../actions';
+
+
+class LoanRatesTable extends Component {
+  // Add prop-types
+  // Add defaultProps
+  
   constructor() {
     super();
 
     this.renderLoanRate = this._renderLoanRate.bind(this);
+    this.selectLoanRate = this._selectLoanRate.bind(this);
   }
 
   render() {
@@ -21,21 +31,22 @@ class LoanRates extends Component {
           </tr>
         </thead>
         <tbody>
-          { loanRates.map(this.renderLoanRate(loanRate)) }
+          { loanRates.map(loanRate => this.renderLoanRate(loanRate)) }
         </tbody>
       </table>
     )
   }
 
   _renderLoanRate(loanRate) {
+    const { selectedLoanRate } = this.props;
     const {
-      rate,
       id,
-      activeCurrency,
+      rate,
       minSum,
       maxSum,
       minTerm,
-      maxTerm
+      maxTerm,
+      activeCurrency
     } = loanRate;
   
     return (
@@ -43,8 +54,8 @@ class LoanRates extends Component {
         <td>
           <span>{rate}</span>
           <button
-            className={`btn btn-outline-primary ml-3 ${(filterObj.id === id) ? 'active' : ''}`}
-            onClick={() => this.selectLoanRate(loanRate.id)}
+            className={`btn btn-outline-primary ml-3 ${selectedLoanRate.id === id ? 'active' : ''}`}
+            onClick={() => this.selectLoanRate(loanRate)} // work with this fuction
           >Выбрать</button>
         </td>
   
@@ -54,6 +65,27 @@ class LoanRates extends Component {
       </tr>
     )
   }
+
+  _selectLoanRate(loanRate) {
+    const { 
+      selectedLoanRate, 
+      dispatch
+    } = this.props;
+
+    if (selectedLoanRate.id === id) return;
+
+    return dispatch(addSelectedLoanRate(loanRate));
+  }
 }
 
-export default LoanRates;
+
+const mapStateToProps = (state) => {
+  const { loanRates } = state;
+
+  return {
+    loanRates,
+    selectedLoanRate,
+  }
+}
+
+export default connect(mapStateToProps)(LoanRatesTable);

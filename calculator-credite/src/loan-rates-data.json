@@ -6,11 +6,11 @@
     "maxSum": 20000,
     "minTerm": 6,
     "maxTerm": 24,
-    "currency": [
-      "гривны",
-      "доллары"
+    "currencies": [
+      "гривна",
+      "доллар"
     ],
-    "activeCurrency": "доллары"
+    "activeCurrency": "доллар"
   },
   {
     "id": 1,
@@ -19,11 +19,11 @@
     "maxSum": 190000,
     "minTerm": 12,
     "maxTerm": 60,
-    "currency": [
-      "гривны",
-      "доллары"
+    "currencies": [
+      "гривна",
+      "доллар"
     ],
-    "activeCurrency": "доллары"
+    "activeCurrency": "доллар"
   },
   {
     "id": 2,
@@ -32,11 +32,11 @@
     "maxSum": 200000,
     "minTerm": 8,
     "maxTerm": 36,
-    "currency": [
-      "гривны",
-      "доллары"
+    "currencies": [
+      "гривна",
+      "доллар"
     ],
-    "activeCurrency": "гривны"
+    "activeCurrency": "гривна"
   },
   {
     "id": 3,
@@ -45,11 +45,11 @@
     "maxSum": 500000,
     "minTerm": 6,
     "maxTerm": 20,
-    "currency": [
-      "гривны",
-      "доллары"
+    "currencies": [
+      "гривна",
+      "доллар"
     ],
-    "activeCurrency": "гривны"
+    "activeCurrency": "гривна"
   },
   {
     "id": 4,
@@ -58,10 +58,10 @@
     "maxSum": 10000000,
     "minTerm": 24,
     "maxTerm": 120,
-    "currency": [
-      "гривны",
-      "доллары"
+    "currencies": [
+      "гривна",
+      "доллар"
     ],
-    "activeCurrency": "гривны"
+    "activeCurrency": "гривна"
   }
 ]

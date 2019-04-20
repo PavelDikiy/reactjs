@@ -1,18 +1,62 @@
-const initState = {
-  creditrate: [],
-  loading: true
+// Redux
+import { combineReducers } from 'redux';
+
+
+const defaultState = {
+  loanRates: [],
+  selectedLoanRate: {},
+  hasSelectedLoanRate: false,
+  isFetchingLoanRates: true,
+  loanSum: 0,
+  loanCurrency: 'гривна',
+  loanTerm: ''
 };
 
-const reducer = (state = initState, action) => {
+const loanRatesStorage = (state = defaultState, action) => {
   switch (action.type) {
-    case 'CREDITRATE_LOADED':
+    case 'FETCH_LOAN_RATES':
       return {
-        creditrate: action.rate,
-        loading: false
+        ...state,
+        loanRates: action.loanRates,
+        isFetchingLoanRates: action.isFetchingLoanRates
       };
+    
+    case 'ADD_SELECTED_LOAN_RATE':
+      return {
+        ...state,
+        selectedLoanRate: action.selectedLoanRate,
+        hasSelectedLoanRate: action.hasSelectedLoanRate
+      };
+
+    case 'SET_LOAN_SUM':
+      return {
+        ...state,
+        loanSum: action.loanSum
+      }
+
+    case 'SET_LOAN_CURRENCY':
+      return {
+        ...state,
+        loanCurrency: action.loanCurrency
+      }
+
+    case 'SET_LOAN_TERM':
+      return {
+        ...state,
+        loanCurrency: action.loanCurrency
+      }
+
+    case '':
+      return {
+
+      }
+      
     default:
       return state;
   }
 };
 
-export default reducer;
+
+export default combineReducers({ 
+  loanRatesStorage
+});

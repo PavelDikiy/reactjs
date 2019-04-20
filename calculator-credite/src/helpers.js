@@ -16,3 +16,21 @@ export const getUniqueID = (length = 15) => {
 
   return text;
 };
+
+
+export const customTimeout = (func, delay = 500) => {
+	let timeout;
+
+	setCustomTimeout(func);
+
+	function setCustomTimeout(func) {
+		timeout = setTimeout(function(){
+			func();
+			clearCustomTimeout();
+		}, delay);
+	}
+
+	function clearCustomTimeout() {
+		clearTimeout(timeout);
+	}
+}
