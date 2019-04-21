@@ -6,6 +6,9 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { setLoanSum, setLoanCurrency, setLoanTerm } from '../../actions';
 
+// # Instruments
+import { getUniqueID } from '../../helpers';
+
 
 class CalculationForm extends Component {
   constructor() {
@@ -14,11 +17,15 @@ class CalculationForm extends Component {
     this.changeLoanSum = this._changeLoanSum.bind(this);
     this.changeLoanCurrency = this._changeLoanCurrency.bind(this);
     this.changeLoanTerm = this._changeLoanTerm.bind(this);
+
+    this.renderLoanTermOptions = this._renderLoanTermOptions.bind(this);
+    this.calculateMounthPaymentsValue = this._calculateMounthPaymentsValue.bind(this);
+    this.calculateFullLoanSum = this._calculateFullLoanSum.bind(this);
   }
 
   render() {
     const {
-      selectedRate,
+      selectedLoanRate,
       loanCurrency,
       loanTerm,
       loanSum
@@ -31,16 +38,26 @@ class CalculationForm extends Component {
 
           <div className="form-group">
             <label className="small-text" htmlFor="formControlRange">Сумма</label>
-            <p className="form-control-result">{loanSum}</p>
+            <p className="form-control-result">
+              {
+                loanSum === 0 || loanSum < selectedLoanRate.minSum || loanSum > selectedLoanRate.maxSum 
+                  ? selectedLoanRate.minSum 
+                  : loanSum 
+              }
+            </p>
             
             <input 
               id="formControlRange"
               className="form-control-range"
               type="range"
-              value={loanSum}
+              value={
+                loanSum === 0 || loanSum < selectedLoanRate.minSum || loanSum > selectedLoanRate.maxSum 
+                  ? selectedLoanRate.minSum 
+                  : loanSum 
+              }
               onChange={this.changeLoanSum}
-              min={selectedRate.minSum} 
-              max={selectedRate.maxSum}
+              min={selectedLoanRate.minSum} 
+              max={selectedLoanRate.maxSum}
             />
           </div>
 
@@ -54,7 +71,7 @@ class CalculationForm extends Component {
                 value={loanCurrency}
                 onChange={this.changeLoanCurrency}
               >
-                { selectedRate.currency.map((item, i) => <option key={i}>{item}</option>) } 
+                { selectedLoanRate.currencies.map(item => <option key={getUniqueID()}>{item}</option>) } 
               </select>
             </div>
 
@@ -67,19 +84,12 @@ class CalculationForm extends Component {
                 value={loanTerm}
                 onChange={this.changeLoanTerm}
               >
-                { selectedRate.arrTerm.map((item, i) => <option key={i}>{item}</option>) } 
+                { this.renderLoanTermOptions() } 
               </select>
             </div>
 
             <div className="col-sm">
-              <Link className="btn btn-success"
-                to={{
-                  pathname: '/result', 
-                  query: {
-                    result: this.resultObj() // ???? Эта функция возвращает объект в строку, которая обрабатывается на странице результата и выводит общую информацию о кредите. Эта штука больше не понадобится, так как все данные хранятся в Redux хранилище
-                  }
-                }}
-              >Взять кредит</Link>
+              <Link className="btn btn-success" to={{ pathname: '/result' }}>Взять кредит</Link>
             </div>
 
             <div className="col-sm">
@@ -87,19 +97,25 @@ class CalculationForm extends Component {
                 <div className="row">
                   <div className="col-sm">
                     <span className="small-text">Ставка по кредиту</span>
-                    <p>{selectedRate.rate}%</p>
+                    <p>{selectedLoanRate.rate}%</p>
                   </div>
 
                   <div className="col-sm">
                     <span className="small-text">Ежемесячный платеж</span>
-                    <p>{monthPayment} {this.correctCur() /* ?? */ }</p> 
+                    <p>
+                      {this.calculateMounthPaymentsValue()} 
+                      {(loanCurrency === "гривна") ? 'грн.' : '$'}
+                    </p> 
                   </div>
                 </div>
 
                 <div className="row">
                   <div className="col-sm">
-                    <span className="small-text">Общая переплата</span>
-                    <p className="big-text">{fullSum} {this.correctCur() /* ?? */ }</p>
+                    <span className="small-text">Общая сумма по кредиту</span>
+                    <p className="big-text">
+                      {this.calculateFullLoanSum()} 
+                      {(loanCurrency === "гривна") ? 'грн.' : '$'}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -110,6 +126,17 @@ class CalculationForm extends Component {
     )
   }
 
+  _renderLoanTermOptions() {
+    const { minTerm, maxTerm } = this.props.selectedLoanRate;
+    
+    let result = [];
+
+    for(let i = minTerm; i <= maxTerm; i++) {
+      result.push(i);
+    }
+
+    return result.map(term => <option key={getUniqueID()}>{term}</option>)
+  }
 
   _changeLoanSum(event) {
     const { dispatch } = this.props;
@@ -118,43 +145,70 @@ class CalculationForm extends Component {
     dispatch(setLoanSum(Number(value)));
   }
 
-  _changeLoanCurrency() {
+  _changeLoanCurrency(event) {
     const { dispatch } = this.props;
     const { value } = event.target;
 
     dispatch(setLoanCurrency(value));
   }
 
-  _changeLoanTerm() {
+  _changeLoanTerm(event) {
     const { dispatch } = this.props;
     const { value } = event.target;
+
+    console.log(value);
 
     dispatch(setLoanTerm(Number(value)));
   }
 
+  _calculateMounthPaymentsValue() {
+    const { loanTerm, fullLoanSum } = this.props;
 
-
-  // ?
-  _resultObj() {
-
+    return Math.ceil(fullLoanSum / loanTerm);
   }
 
-  // ? 
-  _correctCur() {
+  _calculateFullLoanSum() {
+    const { 
+      loanSum,
+      loanTerm,
+      loanCurrency,
+      selectedLoanRate
+    } = this.props;
 
+    const coef = selectedLoanRate.rate / 100 / 12;
+    let fullLoanSum = Math.ceil(loanSum * coef * Math.pow((1 + coef), loanTerm) / (Math.pow((1 + coef), loanTerm) - 1) * loanTerm);
+
+    if (selectedLoanRate.activeCurrency === 'доллар' && loanCurrency !== selectedLoanRate.activeCurrency) {
+      fullLoanSum *= 27;
+    } 
+
+    if (selectedLoanRate.activeCurrency === 'гривна' && loanCurrency !== selectedLoanRate.activeCurrency) {
+      fullLoanSum = Math.ceil(fullLoanSum / 27);
+    }
+
+    return fullLoanSum;
   }
 }
 
 
-const mapStatetoProps = (state) => {
+const mapStateToProps = (state) => {
+  const {
+    loanSum,
+    loanTerm,
+    loanCurrency,
+    selectedLoanRate
+  } = state.loanRatesStorage;
 
   return {
-
+    loanSum,
+    loanTerm,
+    loanCurrency,
+    selectedLoanRate
   }
 };
 
 
-export default CalculationForm;
+export default connect(mapStateToProps)(CalculationForm);
 
 
 
@@ -203,39 +257,6 @@ export default CalculationForm;
 
 
 
-
-
-//   fullSum = () => {
-//     this.setState(({ coef, filterObj, selectCur, selectSum, selectTerm }) => {
-
-//       let result = Math.ceil(+selectSum * +coef * Math.pow((1 + +coef), +selectTerm) / (Math.pow((1 + +coef), +selectTerm) - 1) * +selectTerm);
-
-//       if (filterObj["activeCurrency"] === "доллары" && selectCur !== filterObj["activeCurrency"]) {
-//         result *= 27;
-//       }
-//       if (filterObj["activeCurrency"] === "гривны" && selectCur !== filterObj["activeCurrency"]) {
-//         result = Math.ceil(result / 27);
-//       }
-
-//       localStorage.setItem('fullSum', result);
-//       return { fullSum: result }
-//     });
-//   };
-
-
-    // #
-
-//   monthPayment = () => {
-//     this.setState(({ fullSum, selectTerm }) => {
-//       const mp = Math.ceil(fullSum / selectTerm);
-//       localStorage.setItem('monthPayment', mp);
-//       return { monthPayment: mp }
-//     });
-//   };
-
-
-    // #
-
 //   overPayment = () => {
 //     this.setState(({ fullSum, selectSum }) => {
 //       localStorage.setItem('overPayment', fullSum - selectSum);
@@ -250,13 +271,6 @@ export default CalculationForm;
 //     this.fullSum();
 //     this.monthPayment();
 //     this.overPayment();
-//   };
-
-
-    // #
-
-//   correctCur = () => {
-//     return (this.state.selectCur === "гривны") ? 'грн.' : '$'
 //   };
 
 

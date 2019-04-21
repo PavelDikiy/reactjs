@@ -1,14 +1,13 @@
 // # Core
 import React, { Component } from 'react';
+import { bool } from 'prop-types';
 
 // # Redux
 import { connect } from 'react-redux';
 import { fetchLoanRates } from '../../actions';
 
-
 // # Instruments
-import { customTimeout } from '../../helpers';
-import loanRatesData from './loan-rates-data.json';
+import loanRatesData from '../../loan-rates-data.json';
 import './styles.css';
 
 // # Components
@@ -18,8 +17,10 @@ import CalculationForm from '../../components/CalculationForm';
 
 
 class Calculator extends Component {
-  // add prop-types
-  // add defaultProps
+  static propTypes = {
+    isFetchingLoanRates: bool,
+    hasSelectedLoanRate: bool
+  }
 
   constructor() {
     super();
@@ -27,12 +28,10 @@ class Calculator extends Component {
     this.renderChooseRateMessage = this._renderChooseRateMessage.bind(this);
   }
 
-  componentDidMount() {
+  componentWillMount() {
     const { dispatch } = this.props;
 
-    customTimeout(() => {
-      dispatch(fetchLoanRates(loanRatesData));
-    }, 1000);
+    dispatch(fetchLoanRates(loanRatesData));
   }
 
   render() {
@@ -73,15 +72,16 @@ class Calculator extends Component {
   }
 }
 
-
 const mapStateToProps = (state) => {
-  const { isFetchingLoanRates, hasSelectedLoanRate } = state;  
+  const { 
+    isFetchingLoanRates,
+    hasSelectedLoanRate
+  } = state.loanRatesStorage;
 
-  return {
+  return { 
     isFetchingLoanRates,
     hasSelectedLoanRate
   }
 }
-
 
 export default connect(mapStateToProps)(Calculator);

@@ -1,7 +1,6 @@
 // Redux
 import { combineReducers } from 'redux';
 
-
 const defaultState = {
   loanRates: [],
   selectedLoanRate: {},
@@ -9,7 +8,7 @@ const defaultState = {
   isFetchingLoanRates: true,
   loanSum: 0,
   loanCurrency: 'гривна',
-  loanTerm: ''
+  loanTerm: 0
 };
 
 const loanRatesStorage = (state = defaultState, action) => {
@@ -43,12 +42,7 @@ const loanRatesStorage = (state = defaultState, action) => {
     case 'SET_LOAN_TERM':
       return {
         ...state,
-        loanCurrency: action.loanCurrency
-      }
-
-    case '':
-      return {
-
+        loanTerm: action.loanTerm
       }
       
     default:

@@ -5,11 +5,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { addSelectedLoanRate } from '../../actions';
 
+// # Instruments
+import { getUniqueID } from '../../helpers';
+
 
 class LoanRatesTable extends Component {
-  // Add prop-types
-  // Add defaultProps
-  
   constructor() {
     super();
 
@@ -50,12 +50,12 @@ class LoanRatesTable extends Component {
     } = loanRate;
   
     return (
-      <tr>
+      <tr key={getUniqueID()}>
         <td>
           <span>{rate}</span>
           <button
             className={`btn btn-outline-primary ml-3 ${selectedLoanRate.id === id ? 'active' : ''}`}
-            onClick={() => this.selectLoanRate(loanRate)} // work with this fuction
+            onClick={() => this.selectLoanRate(loanRate)}
           >Выбрать</button>
         </td>
   
@@ -67,24 +67,21 @@ class LoanRatesTable extends Component {
   }
 
   _selectLoanRate(loanRate) {
-    const { 
-      selectedLoanRate, 
-      dispatch
-    } = this.props;
-
-    if (selectedLoanRate.id === id) return;
+    const { dispatch } = this.props;
 
     return dispatch(addSelectedLoanRate(loanRate));
   }
 }
 
-
 const mapStateToProps = (state) => {
-  const { loanRates } = state;
+  const { 
+    loanRates, 
+    selectedLoanRate 
+  } = state.loanRatesStorage;
 
   return {
     loanRates,
-    selectedLoanRate,
+    selectedLoanRate
   }
 }
 
