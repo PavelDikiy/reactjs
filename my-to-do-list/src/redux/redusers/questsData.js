@@ -40,8 +40,6 @@ const questsData = (state = defaultState, action) => {
                 return _item;
             });
 
-            console.log(newState);
-
             return {
                 ...state,
                 quests: newState

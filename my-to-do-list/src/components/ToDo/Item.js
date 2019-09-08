@@ -1,6 +1,7 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
-import {removeQuest, checkedQuest} from '../../redux/actions';
+import {removeQuest, checkedQuest, updateProfileDataQuests, updateProfileDataCoins,
+    activeLogs} from '../../redux/actions';
 
 class Item extends PureComponent {
     constructor(props) {
@@ -16,45 +17,46 @@ class Item extends PureComponent {
         this.setState({isChecked});
     }
 
+    _buildLogs(boll){
+        return {
+            id: this.props.item.id,
+            title: this.props.item.title,
+            complete: boll ? "Выполнено" : "Накуя ты удалил?",
+            time: Date.now(),
+        }
+    }
+
     _onDelete = () => {
         this.props.dispatch(removeQuest(this.props.item.id));
+        this.props.dispatch(activeLogs(this._buildLogs(false)));
     };
 
     _onChanged = () => {
+        this.props.dispatch(updateProfileDataQuests());
+        this.props.dispatch(updateProfileDataCoins(this.props.item.coin));
         this.props.dispatch(checkedQuest(this.props.item.id));
+        this.props.dispatch(activeLogs(this._buildLogs(true)));
         this.setState({isChecked: !this.state.isChecked});
     };
 
     _activeClass= (valid, _class)=>{
         return valid ? _class : null;
-    }
+    };
 
     render() {
         const {item} = this.props;
 
         return (
             <>
-                <input type='hidden' value={item.id}/>
-                <td className={this._activeClass(item.isChecked, "alert-success") }>
-                    <label>
-                        <input type="checkbox" checked={item.isChecked} onClick={this._onChanged}/>
-                    </label>
-                </td>
                 <td className={this._activeClass(item.isChecked, "alert-success") }>{item.title}</td>
                 <td className={this._activeClass(item.isChecked, "alert-success") }>{item.coin}</td>
                 <td className={this._activeClass(item.isChecked, "alert-success") }>
-                    <button className="btn btn-danger" onClick={this._onDelete}>x</button>
+                    <button disabled={item.isChecked ? "disabled" : false} className="btn btn-danger" onClick={this._onDelete}>x</button>
+                    <button disabled={item.isChecked ? "disabled" : false} className="btn btn-success" onClick={this._onChanged}>готово</button>
                 </td>
             </>
         )
     }
 };
 
-
-const mapStateToProps = (state) => {
-    console.log('state', state);
-
-    return;
-};
-
-export default connect(mapStateToProps)(Item);
+export default connect()(Item);

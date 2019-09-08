@@ -10,32 +10,39 @@ class ToDo extends Component {
         return (
             <table className="table" style={{marginTop: 50+'px'}}>
                 <thead>
-                <tr>
-                    <th scope="col">Активность</th>
-                    <th scope="col">Наименование</th>
-                    <th scope="col">Очки</th>
-                    <th scope="col">Действия</th>
-                </tr>
+                    <tr>
+                        <th scope="col">Наименование</th>
+                        <th scope="col">Очки</th>
+                        <th scope="col">Действия</th>
+                    </tr>
                 </thead>
-                {
-                    (tasks !== null && tasks !== undefined && tasks.length > 0) ?
-                        tasks.map((_item) => {
-                            return (<tr><Item key={_item.id} item={_item}/></tr>);
-                        })
-                        : "нет тасков"
-                }
+                <tbody>
+                    {
+                        (tasks !== null && tasks !== undefined && tasks.length > 0) ?
+                            tasks.map((_item) => {
+                                return (<tr key={_item.id}><Item item={_item}/></tr>);
+                            })
+                            : "нет тасков"
+                    }
+                </tbody>
             </table>
         )
     };
 
     render() {
-        const {quests} = this.props;
+        const { quests } = this.props;
+
+        const _quests = quests.slice().sort((a,b)=> {
+            if(a.isChecked > b.isChecked){return 1;}
+            else{return -1;}
+        });
+//console.log(_quests);
         return (
             <div>
                 <div>
                     <AddItem place='title'/>
                 </div>
-                {this._renderTasks(quests)}
+                {this._renderTasks(_quests)}
             </div>
         )
     }
