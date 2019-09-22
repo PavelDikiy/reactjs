@@ -1,0 +1,26 @@
+.l-container {
+  @include inline-block;
+  
+  margin: 0 auto;
+  overflow: hidden;
+
+  max-width: 1366px;
+  height: calc(100% - 92px);
+  width: 100%;
+}
+
+.l-left,
+.l-right {
+  @include inline-block;
+
+  height: 100%;
+  
+}
+
+.l-left {
+  width: 651px;
+}
+
+.l-right {
+  width: calc(100% - 651px);
+}

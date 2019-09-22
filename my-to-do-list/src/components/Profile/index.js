@@ -1,41 +1,60 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+// # Core
+import React, { Component } from "react";
+
+// # Redux
+import { connect } from "react-redux";
+
+// # Components
+import Icon from '../Icon';
+
+// # Instruments
+import ProfileImage from './profile.jpg';
+
 
 class Profile extends Component {
-/*    constructor(props) {
-        super(props);
-    }*/
+  render() {
+    const { name, lvl, completedQuests, coins } = this.props;
+    const questsForLevel = lvl * 3;
 
-    render() {
-        const {name, lvl, completed, all, coins} = this.props;
+    return (
+      <div className="profile">
+        <div className="profile__left profile__image">
+          <img src={ProfileImage} alt="User"/>
+        </div>
 
-        console.log(coins);
-
-        return (
-            <div>
-                <div className="card" style={{width: "18rem"}}>
-                    <img src="https://www.gravatar.com/avatar/ac0e53fe80b528c0d4a3b9bbd7e2bd91?size=200&d=https%3A%2F%2Fsalesforce-developer.ru%2Fwp-content%2Fuploads%2Favatars%2Fno-avatar.jpg" className="card-img-top" alt="no-avatar" />
-                        <div className="card-body">
-                            <h5 className="card-title">{name}</h5>
-                            <ul className="list-group list-group-flush">
-                                <li className="list-group-item"><b>lvl</b>: {lvl}</li>
-                                <li className="list-group-item"><b>Готово</b>: {completed}</li>
-                                <li className="list-group-item"><b>Всего</b>: {all}</li>
-                                <li className="list-group-item"><b>Всего бабла</b>: {coins}</li>
-                            </ul>
-                        </div>
-                </div>
+        <div className="profile__right">
+          <div className="profile__name">{name}</div>
+          <div className="profile__info">Уровень {lvl}</div>
+          <div className="profile__expirience">
+            <div className="profile__expirience-line">
+              <div className="profile__expirience-line-complete" style={{ width: `${Math.floor(completedQuests / questsForLevel * 100)}%` }}></div>
+              <div className="profile__expirience-label">Выполнено задач</div>
             </div>
-        )
-    }
+            <div className="profile__expirience-points">{completedQuests} / {questsForLevel}</div>
+          </div>
+          <div className="profile__cash">
+            <div className="profile__cash-icon">
+              <Icon type="coin" />
+            </div>
+            <div className="profile__cash-value">{coins}</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 }
 
-const mapStateToProps = (state) => {
-    const {name, lvl, completed, all, coins} = state.profileData;
 
-    return {
-        name, lvl, completed, all, coins
-    };
+const mapStateToProps = (state) => {
+  const { completedQuests, coins, name, lvl } = state.profileData;
+
+  return {
+    completedQuests,
+    coins,
+    name,
+    lvl,
+  };
 };
+
 
 export default connect(mapStateToProps)(Profile);

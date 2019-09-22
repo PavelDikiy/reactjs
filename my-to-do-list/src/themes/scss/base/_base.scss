@@ -1,0 +1,45 @@
+body {
+  background-color: #fff;
+  font-family: $font-helvetica;
+  font-weight: 400;
+  overflow-x: hidden;
+
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none;
+}
+
+main {
+  box-shadow: 0 3px 8px 0 rgba(0, 0, 0, 0.1);
+  height: 100%;
+  width: 100%;
+}
+
+a,
+img {
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+a {
+  position: relative;
+}
+
+img {
+  object-fit: cover;
+
+  display: block;
+  @include full-size;
+}

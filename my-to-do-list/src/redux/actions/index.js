@@ -1,3 +1,3 @@
 export { addQuest, removeQuest, checkedQuest } from './questsAction';
-export { updateProfileDataQuests, updateProfileDataCoins } from './profileAction';
+export { updateProfileCompletedQuests, updateProfileCoinsValue, updateProfileLevelUp } from './profileActions';
 export { activeLogs } from './activeLogs';

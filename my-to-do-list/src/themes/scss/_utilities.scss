@@ -1,0 +1,11 @@
+.u-center {
+  text-align: center;
+}
+
+.u-inline-block {
+  @include inline-block;
+}
+
+.u-full-size {
+  @include full-size;
+}

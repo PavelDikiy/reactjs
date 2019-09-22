@@ -1,0 +1,100 @@
+.profile {
+  background-color: white;
+
+  padding: 30px;
+
+  &__left,
+  &__right {
+    @include inline-block;
+  }
+
+  &__left {
+    margin-right: 15px;
+  }
+
+  &__image {
+    border-radius: 50%;
+    overflow: hidden;
+
+    height: 70px;
+    width: 70px;
+  }
+
+  &__name {
+    font-size: 18px;
+    letter-spacing: 0.02em;
+    margin-bottom: 4px;
+  }
+
+  &__info {
+    color: $secondary-text-color;
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+
+  &__expirience {
+    width: 300px;
+
+    &-line {
+      @include inline-block;
+
+      background-color: #d4d4d4;
+      border-radius: 4px;
+      overflow: hidden;
+
+      height: 18px;
+      width: 70%;
+
+      &-complete {
+        background-color: #8195ff;
+
+        position: absolute;
+        top: 0;
+        left: 0;
+
+        height: 100%;
+      }
+    }
+
+    &-label {
+      color: $secondary-text-color;
+      font-size: 12px;
+      padding: 0 10px;
+      text-align: center;
+
+      width: 100%;
+    }
+
+    &-points {
+      @include inline-block;
+
+      color: $secondary-text-color;
+      font-size: 12px;
+      padding-left: 15px;
+      letter-spacing: 0.1em;
+      width: 30%;
+    }
+  }
+
+  &__cash {
+    &-icon,
+    &-value {
+      @include inline-block;
+    }
+
+    &-icon {
+      height: 16px;
+      width: 16px;
+
+      & svg {
+        @include full-size;
+      }
+    }
+
+    &-value {
+      color: $secondary-text-color;
+      font-size: 14px;
+      padding: 3px 0 0 6px;
+    }
+  }
+}

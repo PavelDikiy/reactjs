@@ -1,22 +1,24 @@
-import React from 'react';
-import ToDo from '../../components/ToDo';
-import Profile from '../../components/Profile';
-import Log from '../../components/Log';
+// # Core
+import React, { Component } from "react";
 
-function App() {
+// # Components
+import Profile from "../../components/Profile";
+// import ToDo from "../../components/ToDo";
+// import Log from "../../components/Log";
+
+
+class App extends Component {
+  render() {
     return (
-        <div className="App container">
-            <div style={{display: "flex"}}>
-                <div>
-                    <Profile/>
-                </div>
-                <div style={{flex: 1, marginLeft: 30}}>
-                    <ToDo/>
-                </div>
-                <Log />
-            </div>
-        </div>
+      <>
+        <header className="header"></header>
+        <Profile />
+        {/* <ToDo /> */}
+        {/* <Log /> */}
+      </>
     );
+  }
 }
+
 
 export default App;
