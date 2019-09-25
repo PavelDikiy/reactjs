@@ -1,7 +1,7 @@
 + Переработать компонент Profile;
 + Переработать стилизацию компонента Profile;
 + Переделать profileData reducer;
-- Переделать profileData action;
++ Переделать profileData action;
 
 
 - Переработать компонент Todo list;

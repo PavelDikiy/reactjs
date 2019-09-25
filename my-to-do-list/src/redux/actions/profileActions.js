@@ -8,7 +8,6 @@ export const updateProfileCoinsValue = (coins) => ({
   coins,
 });
 
-export const updateProfileLevelUp = (coins) => ({
+export const updateProfileLevelUp = () => ({
   type: 'UPDATE_PROFILE_LEVEL_UP',
-  coins,
 });
